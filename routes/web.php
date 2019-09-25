@@ -14,3 +14,13 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::resource('countries', 'CountryController');
+Route::resource('states', 'StateController');
+Route::get('categories/back', 'CategoryController@back')->name('categories.back');
+Route::get('categories/custom', 'CategoryController@my_custom_function')->name('categories.my_custom_function');
+Route::resource('categories', 'CategoryController');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
