@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Sep 25, 2019 at 05:08 PM
+-- Generation Time: Sep 30, 2019 at 04:59 PM
 -- Server version: 5.7.21
 -- PHP Version: 5.6.35
 
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `rf_permissions` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `rf_permissions_ident_unique` (`ident`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `rf_permissions`
@@ -135,7 +135,11 @@ INSERT INTO `rf_permissions` (`id`, `name`, `ident`, `description`, `active`, `c
 (5, 'Countries', 'countries.index', '', 1, '2019-09-24 14:30:00', '2019-09-24 14:30:00'),
 (6, 'Countries Create', 'countries.create', '', 1, '2019-09-24 14:30:00', '2019-09-24 14:30:00'),
 (7, 'Countries Edit', 'countries.edit', '', 1, '2019-09-24 14:30:00', '2019-09-24 14:30:00'),
-(8, 'Countries Delete', 'countries.delete', '', 1, '2019-09-24 14:30:00', '2019-09-24 14:30:00');
+(8, 'Countries Delete', 'countries.delete', '', 1, '2019-09-24 14:30:00', '2019-09-24 14:30:00'),
+(9, 'States', 'states.index', '', 0, NULL, NULL),
+(10, 'State Create', 'states.create', '', 0, NULL, NULL),
+(11, 'State edit', 'states.edit', '', 0, NULL, NULL),
+(12, 'State Delete', 'states.delete', '', 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -186,6 +190,7 @@ CREATE TABLE IF NOT EXISTS `rf_role_permissions` (
 INSERT INTO `rf_role_permissions` (`role_id`, `permission_id`) VALUES
 (1, 1),
 (1, 2),
+(1, 5),
 (2, 5),
 (2, 6);
 
