@@ -4,18 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use Illuminate\Http\Request;
-//use Illuminate\Http\Route;
+
 
 
 class CategoryController extends Controller
 {
-    /**
+	/**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
+		
         $categories = Category::all();
 		
 		$controllers = [];
@@ -27,18 +28,11 @@ class CategoryController extends Controller
 
 			if (array_key_exists('controller', $action))
 			{
-				echo "<pre>";
-					print_r($action);
-				echo "</pre>";
 				// You can also use explode('@', $action['controller']); here
 				// to separate the class name from the method
 				$controllers[] = $action['controller'];
 			}
 		}
-		
-		echo "<pre>";
-			print_r($controllers);
-		echo "</pre>";
 
 		return view('categories/index', compact('categories'));
     }
@@ -50,6 +44,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
+		$category = Category::find(1);		
         return view('categories/create');
     }
 
@@ -89,8 +84,7 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $category = Category::findOrFail($id);
-
+        $category = Category::findOrFail($id);		
 		return view('categories/edit', compact('category'));
     }
 
