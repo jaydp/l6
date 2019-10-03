@@ -2,23 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
+use App\Role;
+use App\Permission;
 use Illuminate\Http\Request;
 
-
-
-class CategoryController extends Controller
+class RoleController extends Controller
 {
-	/**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
+        $roles = Role::all();		
 		
-        $categories = Category::all();		
-		return view('categories/index', compact('categories'));
+		return view('roles/index', compact('roles'));
     }
 
     /**
@@ -28,8 +27,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-		$category = Category::find(1);		
-        return view('categories/create');
+        return view('roles/create');
     }
 
     /**
@@ -44,9 +42,9 @@ class CategoryController extends Controller
 			'name' => 'required|max:255',
 			'description' => 'required|max:255'
 		]);
-		$category = Category::create($validatedData);
+		$role = Role::create($validatedData);
 
-		return redirect('/categories')->with('success', 'Category is successfully saved');
+		return redirect('/roles')->with('success', 'Role is successfully saved');
     }
 
     /**
@@ -68,8 +66,8 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $category = Category::findOrFail($id);		
-		return view('categories/edit', compact('category'));
+        $role = Role::findOrFail($id);		
+		return view('roles/edit', compact('role'));
     }
 
     /**
@@ -85,12 +83,12 @@ class CategoryController extends Controller
 			'name' => 'required|max:255',
 			'description' => 'required|max:255'
 		]);
-        Category::whereId($id)->update($validatedData);
+        Role::whereId($id)->update($validatedData);
 
-        return redirect('/categories')->with('success', 'Category is successfully updated');
+        return redirect('/roles')->with('success', 'Role is successfully updated');
     }
 
-	/**
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
@@ -98,25 +96,26 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $category = Category::findOrFail($id);
-        $category->delete();
+        $role = Role::findOrFail($id);
+        $role->delete();
 
-        return redirect('/categories')->with('success', 'Category is successfully deleted');
+        return redirect('/roles')->with('success', 'Role is successfully deleted');
     }
 	
-	public function back()
+	public function permissions($role)
+    {
+			
+        $permissions = Permission::all()->pluck('ident')->toArray();
+				
+		return view('roles/permission', compact('permissions'));
+    }
+	
+	public function permissions_update($role)
 	{
 		echo "<pre>";
-			print_r("BACK");
+			print_r($role);
 		echo "</pre>";
 		exit();
-		return true;
-	}
-	public function my_customfunction()
-	{
-		echo "my_custom_function";
-		exit;
-		return true;
 	}
 	
 }
