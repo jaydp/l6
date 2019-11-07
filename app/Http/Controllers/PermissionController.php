@@ -31,6 +31,10 @@ class PermissionController extends Controller
 				$router_group = implode(",", $action['middleware']);
 				$controller = explode("@",str_replace($action['namespace']."\\","",$action['controller']));
 				$controller_name = $controller[0];
+				if(strpos($controller_name,'Auth')!==false) {
+					continue;
+				}
+				
 				$functions = $controller[1];
 				
 				$action_name = (isset($action['as']) && !empty($action['as']))?$action['as']:$functions;

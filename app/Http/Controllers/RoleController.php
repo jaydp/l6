@@ -105,17 +105,88 @@ class RoleController extends Controller
 	public function permissions($role)
     {
 			
-        $permissions = Permission::all()->pluck('ident')->toArray();
-				
-		return view('roles/permission', compact('permissions'));
+        $permissions = Permission::select('ident', 'controller', 'name', 'router_group', 'uri', 'method')->where('active',1)->get();
+		
+		$controllers = [];
+		foreach($permissions as $permission)
+		{
+			$controller_name = $permission['controller'];
+			$action_name = $permission['ident'];
+			$router_group = $permission['router_group'];
+			$uri = $permission['uri'];
+			$method = $permission['method'];
+			$controllers[$controller_name][$action_name] = array('router_group' => $router_group, 'uri' => $uri, 'method' => $method);
+		}
+		
+		// Search for the permission of the role
+		$roles = Role::where('id',$role)->with('permissions')->first();
+		
+		$role_permissions = [];		
+		foreach ($roles->permissions as $permission){
+			$role_permissions[] = $permission->ident;			
+		}
+		
+		return view('roles/permission', compact('roles', 'controllers', 'role_permissions'));
     }
 	
-	public function permissions_update($role)
+	public function permissions_update(Request $request, $role)
 	{
+		$postData = $request->post();
 		echo "<pre>";
-			print_r($role);
+			print_r($postData);
 		echo "</pre>";
 		exit();
 	}
+	
+	public function refresh_permissions()
+	{
+		//Deactivate all the permission records		
+		Permission::where('active',1)->update(['active' => 0]);
+		
+		$controllers = [];
+
+		foreach (\Route::getRoutes()->getRoutes() as $route)
+		{
+			$action = $route->getAction();
+			$uri = $route->uri();
+			
+			if (array_key_exists('controller', $action))
+			{				
+				// You can also use explode('@', $action['controller']); here
+				// to separate the class name from the method
+
+				$router_group = implode(",", $action['middleware']);
+				$controller = explode("@",str_replace($action['namespace']."\\","",$action['controller']));
+				$controller_name = $controller[0];
+				if(strpos($controller_name,'Auth')!==false) {
+					continue;
+				}
+				
+				$functions = $controller[1];
+				
+				$action_name = (isset($action['as']) && !empty($action['as']))?$action['as']:$functions;
+				$method = implode('|', $route->methods());
+				
+				if(isset($controllers[$controller_name][$action_name]))
+					$action_name = $action_name."_".$method;
+				
+				//Find and insert or update permission with active status
+				$permissions = Permission::firstOrNew(['ident' => $action_name, 'controller' => $controller_name]);
+				$permissions->name = ucwords(implode(" ", explode(".", str_replace(".index","",$action_name))));
+				$permissions->description = $permissions->name;
+				$permissions->router_group = $router_group;
+				$permissions->uri = $uri;
+				$permissions->method = $method;
+				$permissions->active = 1;
+				$permissions->save();
+				
+				//$controllers[$controller_name][$action_name] = array('router_group' => $router_group, 'function' => $functions, 'uri' => $uri, 'method' => $method);
+			}
+		}
+		
+		return redirect('/roles')->with('success', 'All the permissions are successfully refreshed.');
+	}
+	
+	
 	
 }

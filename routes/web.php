@@ -30,8 +30,9 @@ Route::group(['middleware' => ['auth','ability']], function () {
 	Route::get('categories/custom', 'CategoryController@my_customfunction')->name('categories.my_custom_function');
 	Route::resource('categories', 'CategoryController');
 	
-	Route::get('roles/{role}/permission', 'RoleController@permissions')->name('roles.permissions')->where('role', '[0-9]+');
-	Route::post('roles/{role}/permission', 'RoleController@permissions_update')->name('roles.permissions')->where('role', '[0-9]+');
+	Route::get('roles/refresh_permissions', 'RoleController@refresh_permissions')->name('roles.refresh_permissions');
+	Route::get('roles/{role}/permissions', 'RoleController@permissions')->name('roles.permissions')->where('role', '[0-9]+');
+	Route::post('roles/{role}/permissions', 'RoleController@permissions_update')->name('roles.permissions')->where('role', '[0-9]+');
 	Route::resource('roles', 'RoleController');
 	
 	Route::get('permissions', 'PermissionController@index')->name('permissions.index');

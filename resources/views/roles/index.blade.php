@@ -12,6 +12,7 @@
       {{ session()->get('success') }}  
     </div><br />
   @endif
+  <a href="{{ route('roles.refresh_permissions')}}"  class="btn btn-danger">Refresh Permissions</a>
   <table class="table table-striped">
     <thead>
         <tr>

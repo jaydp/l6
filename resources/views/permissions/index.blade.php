@@ -38,7 +38,7 @@
 						@foreach($c_val as $a_key => $a_val)
 							<tr>
 								<td></td> 
-								<td><input type="checkbox" {{ (in_array($a_key, $permissions))?'checked':'' }} name="action[]" value=""></td>
+								<td><input type="checkbox" {{ (in_array($a_key, $permissions))?'checked':'' }} name="action[{{$c_key}}][{{$a_key}}]" value=""></td>
 								<td>{{$a_key}}</td>           
 								<td>{{$a_val['method']}}</td>           
 								<td>{{$a_val['router_group']}}</td>           
