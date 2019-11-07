@@ -105,7 +105,7 @@ class RoleController extends Controller
 	public function permissions($role)
     {
 			
-        $permissions = Permission::select('ident', 'controller', 'name', 'router_group', 'uri', 'method')->where('active',1)->get();
+        $permissions = Permission::where('active',1)->get();
 		
 		$controllers = [];
 		foreach($permissions as $permission)
@@ -115,9 +115,10 @@ class RoleController extends Controller
 			$router_group = $permission['router_group'];
 			$uri = $permission['uri'];
 			$method = $permission['method'];
-			$controllers[$controller_name][$action_name] = array('router_group' => $router_group, 'uri' => $uri, 'method' => $method);
+			$id = $permission['id'];
+			$controllers[$controller_name][$action_name] = $permission;
 		}
-		
+	
 		// Search for the permission of the role
 		$roles = Role::where('id',$role)->with('permissions')->first();
 		
@@ -132,10 +133,10 @@ class RoleController extends Controller
 	public function permissions_update(Request $request, $role)
 	{
 		$postData = $request->post();
-		echo "<pre>";
-			print_r($postData);
-		echo "</pre>";
-		exit();
+		
+		$role = Role::findOrFail($role);
+		$role->permissions()->create(['permission_id' => 25]);
+
 	}
 	
 	public function refresh_permissions()
