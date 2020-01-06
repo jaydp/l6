@@ -30,17 +30,25 @@ class AppServiceProvider extends ServiceProvider
     {
 		$cacheKey = 'permissions';
 		$permissions = Cache::get($cacheKey);
+		
+		//Refresh After every 10 mins
+		$expiresAt = now()->addMinutes(2);
+
 
         if (! $permissions) {
 			$permissions = Permission::pluck('ident');
-			Cache::put($cacheKey, $permissions->toArray());
+			Cache::put($cacheKey, $permissions->toArray(), $expiresAt);
 		} else {
 			$permissions = collect($permissions);
 		}		
-		
-		$permissions->each(function(string $ident) {
+		/*$userPermissions = Cache::get('user.1.permissions');
+		echo "<pre>";
+			print_r($userPermissions);
+		echo "</pre>";
+		\DB::enableQueryLog();*/
+		$permissions->each(function(string $ident) use($expiresAt) {
 			
-			Gate::define($ident, function ($user) use($ident) {
+			Gate::define($ident, function ($user) use($ident, $expiresAt) {
 				$cacheKey = 'user.' . $user->id . '.permissions';
 				
 				$userPermissions = Cache::get($cacheKey);
@@ -59,9 +67,19 @@ class AppServiceProvider extends ServiceProvider
 											->groupBy('permissions.id')
 											->where('active', '=', 1)
 											->pluck('ident');
-											
-
-					Cache::put($cacheKey, $userPermissions->toArray());
+					//dd(\DB::getQueryLog());
+					
+					Cache::put($cacheKey, $userPermissions->toArray(), $expiresAt);
+					/*echo "<pre>";
+						print_r($userPermissions);
+					echo "</pre>";
+					
+					$userPermissions = Cache::get('user.1.permissions');
+					echo "<pre>";
+						print_r($userPermissions);
+					echo "</pre>";
+					//exit();
+					exit();*/
 				} else {					
 					$userPermissions = collect($userPermissions);
 				}

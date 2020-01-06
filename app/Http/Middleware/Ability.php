@@ -19,9 +19,9 @@ class Ability
         $current_router = $request->route()->getName();
 		
 		// Check if GATE exists or not 
-		if (!Gate::has($current_router)) {
+		/*if (!Gate::has($current_router)) {
 			return $next($request);
-		}
+		}*/
 		
 		// Check user permission from defined GATE
 		if (Gate::allows($current_router)) {
@@ -29,7 +29,7 @@ class Ability
 		}
 		else
 		{
-			return redirect('home');
+			return redirect('denied');
 		}
     }
 }

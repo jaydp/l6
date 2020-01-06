@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Role;
 use App\Permission;
+use App\RolePermission;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
@@ -130,13 +131,29 @@ class RoleController extends Controller
 		return view('roles/permission', compact('roles', 'controllers', 'role_permissions'));
     }
 	
-	public function permissions_update(Request $request, $role)
+	public function permissions_update(Request $request, $role_id)
 	{
 		$postData = $request->post();
 		
-		$role = Role::findOrFail($role);
-		$role->permissions()->create(['permission_id' => 25]);
-
+		if(empty($postData['role_permission']))
+			return redirect('/roles/'.$role_id.'/permissions')->with('success', 'Please select at least one permission');
+		
+		$role_permission_data = array();
+		foreach($postData['role_permission'] as $permission)
+		{
+			$role_permission_data[] = array('role_id' => $role_id, 'permission_id' => $permission);
+		}		
+		RolePermission::where('role_id', '=', $role_id)->delete();
+		
+		$role_permission_data = array();
+		foreach($postData['role_permission'] as $permission)
+		{
+			$role_permission_data[] = array('role_id' => $role_id, 'permission_id' => $permission);
+		}		
+		RolePermission::insert($role_permission_data);
+		
+		return redirect('/roles/'.$role_id.'/permissions')->with('success', 'All the permissions are successfully updated.');
+		
 	}
 	
 	public function refresh_permissions()
@@ -191,3 +208,4 @@ class RoleController extends Controller
 	
 	
 }
+

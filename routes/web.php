@@ -19,6 +19,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/denied', 'HomeController@permission_denied')->name('denied');
 
 Route::group(['middleware' => ['auth','ability']], function () {
 	
