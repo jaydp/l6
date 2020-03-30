@@ -41,7 +41,7 @@
 						@foreach($c_val as $a_key => $a_val)
 							<tr>
 								<td></td>           
-								<td style='text-align:right;'><input type="checkbox" class="check_this" data-rel="{{$c_key}}"  name="role_permission[]" value="{{$a_val['id']}}" id="permission_{{$a_key}}" value="" {{ (in_array($a_key, $role_permissions))?"checked":"" }}></td>           
+								<td style='text-align:right;'><input type="checkbox" class="check_this" data-rel="{{$c_key}}"  name="role_permission[]" value="{{$a_val['id']}}" id="permission_{{$a_key}}" {{ (in_array($a_key, $role_permissions))?"checked":"" }}></td>           
 								<td><label for="permission_{{$a_key}}">{{$a_key}}</label></td>           
 								<td><label for="permission_{{$a_key}}">{{$a_val['router_group']}}</label></td>           
 								<td><label for="permission_{{$a_key}}">{{$a_val['method']}}</label></td>           
