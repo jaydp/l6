@@ -39,4 +39,7 @@ Route::group(['middleware' => ['auth','ability']], function () {
 	Route::get('permissions', 'PermissionController@index')->name('permissions.index');
 	Route::post('permissions', 'PermissionController@update')->name('permissions.update');
 	
+	Route::get('upload_statement', 'DataUploadController@upload_statement_form')->name('data_upload.statement');
+	Route::post('upload_statement', 'DataUploadController@upload_statement_action')->name('data_upload.statement_import');
+	
 });

@@ -191,6 +191,7 @@ class RoleController extends Controller
 				//Find and insert or update permission with active status
 				$permissions = Permission::firstOrNew(['ident' => $action_name, 'controller' => $controller_name]);
 				$permissions->name = ucwords(implode(" ", explode(".", str_replace(".index","",$action_name))));
+				$permissions->controller = $controller_name;
 				$permissions->description = $permissions->name;
 				$permissions->router_group = $router_group;
 				$permissions->uri = $uri;
