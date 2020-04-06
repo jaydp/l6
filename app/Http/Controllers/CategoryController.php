@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Category;
 use Illuminate\Http\Request;
 
-
-
 class CategoryController extends Controller
 {
 	/**
@@ -17,7 +15,17 @@ class CategoryController extends Controller
     public function index()
     {
 		
-        $categories = Category::all();		
+        $categories = Category::where('parent_id','=',0)
+						->with('childrenCategories')
+						->get();
+		/*echo "<pre>";
+		print_r($categories);
+		echo "</pre>";*/
+		
+		/*$category = Category::with('transactions')->find(7);
+		print_r("Hello");
+		print_r($category);
+		print_r("========");*/
 		return view('categories/index', compact('categories'));
     }
 
@@ -42,7 +50,7 @@ class CategoryController extends Controller
     {
         $validatedData = $request->validate([
 			'name' => 'required|max:255',
-			'description' => 'required|max:255'
+			//'description' => 'required|max:255'
 		]);
 		$category = Category::create($validatedData);
 

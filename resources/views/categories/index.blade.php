@@ -12,6 +12,7 @@
       {{ session()->get('success') }}  
     </div><br />
   @endif
+  <a href="{{ route('categories.create') }}" class="btn btn-danger">Create Category</a>
   <table class="table table-striped">
     <thead>
         <tr>
@@ -36,6 +37,9 @@
                 </form>
             </td>
         </tr>
+			@foreach ($category->childrenCategories as $childCategory)
+				@include('categories/child', ['child_category' => $childCategory,'prefix' => '-'])
+			@endforeach
         @endforeach
     </tbody>
   </table>

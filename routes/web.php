@@ -42,4 +42,9 @@ Route::group(['middleware' => ['auth','ability']], function () {
 	Route::get('upload_statement', 'DataUploadController@upload_statement_form')->name('data_upload.statement');
 	Route::post('upload_statement', 'DataUploadController@upload_statement_action')->name('data_upload.statement_import');
 	
+	Route::get('transactions', 'TransactionController@index')->name('transactions.index');
+	Route::post('transactions/assign', 'TransactionController@assgin_category')->name('transactions.assign');
 });
+
+Route::get('import-excel', 'ImportExcel\ImportExcelController@index');
+Route::post('import-excel', 'ImportExcel\ImportExcelController@import');
